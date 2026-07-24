@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Portfolio - Immersive Experience</title>
+    <title>Tanush Burande - 3D Immersive Portfolio</title>
     <style>
         * {
             margin: 0;
@@ -20,81 +20,349 @@
             height: 100vh;
         }
 
+        /* Navigation Bar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: linear-gradient(180deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.8) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 40px;
+            z-index: 300;
+            border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+        }
+
+        .logo-container:hover {
+            opacity: 0.8;
+        }
+
+        .logo-badge {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #d4af37, #f0d680);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #000;
+            font-size: 1.2rem;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.6);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+
+        .logo-text {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .logo-text .name {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #d4af37, #f0d680);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text .title {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: rgba(212, 175, 55, 0.6);
+            text-transform: uppercase;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #aaa;
+            text-decoration: none;
+            font-size: 0.95rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #d4af37;
+            transition: width 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #d4af37;
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a.active {
+            color: #d4af37;
+        }
+
+        .nav-links a.active::after {
+            width: 100%;
+        }
+
+        .cta-button {
+            padding: 10px 25px;
+            background: linear-gradient(135deg, #d4af37, #f0d680);
+            color: #000;
+            border: none;
+            border-radius: 25px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
+            font-size: 0.85rem;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.8);
+        }
+
+        /* Canvas */
         #canvas {
             display: block;
             width: 100%;
             height: 100%;
+            margin-top: 70px;
         }
 
-        /* UI Overlay */
-        .ui-overlay {
+        /* Preloader */
+        .preloader {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            animation: fadeOut 1s ease-out 2.5s forwards;
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; pointer-events: auto; }
+            to { opacity: 0; pointer-events: none; }
+        }
+
+        .preloader-content {
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 30px;
+            perspective: 1000px;
+        }
+
+        .logo-3d {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            animation: flipIn 2s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes flipIn {
+            0% {
+                transform: rotateX(90deg) rotateY(90deg);
+                opacity: 0;
+            }
+            50% {
+                transform: rotateX(0) rotateY(0);
+                opacity: 1;
+            }
+            100% {
+                transform: rotateX(0) rotateY(0) rotateZ(0);
+            }
+        }
+
+        .logo-card {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.2), rgba(240, 214, 128, 0.1));
+            border: 2px solid rgba(212, 175, 55, 0.5);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.3), inset 0 0 30px rgba(212, 175, 55, 0.1);
+            animation: sway 3s ease-in-out 1.5s infinite;
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: rotateZ(-2deg); }
+            50% { transform: rotateZ(2deg); }
+        }
+
+        .logo-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: shimmer 3s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%) translateY(-100%); }
+            100% { transform: translateX(100%) translateY(100%); }
+        }
+
+        .logo-badge-large {
+            width: 100px;
+            height: 100px;
+            background: linear-gradient(135deg, #d4af37, #f0d680);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #000;
+            font-size: 2rem;
+            box-shadow: 0 0 40px rgba(212, 175, 55, 0.8);
+            position: relative;
+            z-index: 1;
+        }
+
+        .preloader-text {
+            font-size: 1.8rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, #d4af37, #f0d680);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: fadeInUp 1s ease-out 0.5s backwards;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .progress-container {
+            width: 300px;
+            height: 3px;
+            background: rgba(212, 175, 55, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #d4af37, #f0d680);
+            width: 0%;
+            animation: fill 2s ease-in-out forwards;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.8);
+        }
+
+        @keyframes fill {
+            0% { width: 0%; }
+            100% { width: 100%; }
+        }
+
+        /* UI Overlay */
+        .ui-overlay {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: 100%;
+            height: calc(100% - 70px);
             pointer-events: none;
             z-index: 100;
         }
 
-        .header {
+        .header-subtitle {
             position: fixed;
-            top: 40px;
+            top: 100px;
             left: 50%;
             transform: translateX(-50%);
             text-align: center;
             pointer-events: none;
-            z-index: 200;
+            animation: fadeIn 2s ease-out 0.5s backwards;
         }
 
-        .header h1 {
-            font-size: 3.5rem;
+        .header-subtitle h2 {
+            font-size: 2.5rem;
             font-weight: 700;
-            letter-spacing: 3px;
+            letter-spacing: 2px;
             text-transform: uppercase;
             background: linear-gradient(135deg, #d4af37, #f0d680);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-            text-shadow: 0 0 30px rgba(212, 175, 55, 0.5);
-            filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3));
-            animation: glow-pulse 3s ease-in-out infinite;
         }
 
-        .header p {
+        .header-subtitle p {
             font-size: 1rem;
             letter-spacing: 2px;
             color: #aaa;
             margin-top: 10px;
-            animation: fade-in 2s ease-out;
         }
 
-        @keyframes glow-pulse {
-            0%, 100% { filter: drop-shadow(0 0 20px rgba(212, 175, 55, 0.3)); }
-            50% { filter: drop-shadow(0 0 40px rgba(212, 175, 55, 0.6)); }
-        }
-
-        @keyframes fade-in {
+        @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
-        }
-
-        /* Section Labels */
-        .section-label {
-            position: fixed;
-            left: 50px;
-            font-size: 1.5rem;
-            font-weight: 300;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: rgba(212, 175, 55, 0.6);
-            opacity: 0;
-            transition: opacity 0.6s ease;
-            pointer-events: none;
-        }
-
-        .section-label.active {
-            opacity: 1;
         }
 
         /* Navigation Dots */
@@ -168,16 +436,17 @@
             position: fixed;
             bottom: 50px;
             left: 50px;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.8);
             border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 10px;
-            padding: 20px;
-            width: 300px;
-            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            width: 350px;
+            backdrop-filter: blur(20px);
             pointer-events: auto;
             opacity: 0;
             transform: translateY(20px);
             transition: all 0.6s ease;
+            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.1);
         }
 
         .info-panel.active {
@@ -187,79 +456,141 @@
 
         .info-panel h3 {
             color: #d4af37;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-size: 1.2rem;
+            letter-spacing: 1px;
         }
 
         .info-panel p {
             color: #aaa;
             font-size: 0.9rem;
-            line-height: 1.6;
+            line-height: 1.8;
         }
 
-        /* Interactive hint */
-        .interactive-hint {
+        .section-label {
             position: fixed;
+            left: 50px;
             top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 2px;
+            text-transform: uppercase;
             color: rgba(212, 175, 55, 0.6);
-            font-size: 1rem;
+            opacity: 0;
+            transition: opacity 0.6s ease;
             pointer-events: none;
-            animation: fade-in-out 3s infinite;
         }
 
-        @keyframes fade-in-out {
-            0%, 100% { opacity: 0; }
-            50% { opacity: 1; }
+        .section-label.active {
+            opacity: 1;
         }
 
-        /* Loading screen */
-        .loading-screen {
+        /* Social Links */
+        .social-links {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
+            bottom: 50px;
+            right: 50px;
+            display: flex;
+            gap: 20px;
+            z-index: 200;
+            pointer-events: auto;
+        }
+
+        .social-link {
+            width: 45px;
+            height: 45px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            z-index: 1000;
-            animation: fade-out 1s ease-out 2s forwards;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: rgba(212, 175, 55, 0.6);
+            text-decoration: none;
+            font-size: 1.1rem;
         }
 
-        @keyframes fade-out {
-            from { opacity: 1; }
-            to { opacity: 0; pointer-events: none; }
+        .social-link:hover {
+            background: rgba(212, 175, 55, 0.1);
+            color: #d4af37;
+            border-color: rgba(212, 175, 55, 0.6);
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
         }
 
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 3px solid rgba(212, 175, 55, 0.2);
-            border-top-color: #d4af37;
-            border-radius: 50%;
-            animation: spin 1.5s linear infinite;
-        }
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 0 20px;
+            }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+            .nav-links {
+                gap: 20px;
+            }
+
+            .nav-links a {
+                font-size: 0.8rem;
+            }
+
+            .cta-button {
+                padding: 8px 16px;
+                font-size: 0.7rem;
+            }
+
+            .logo-text .name {
+                font-size: 0.9rem;
+            }
+
+            .nav-dots, .scroll-hint, .info-panel, .section-label, .social-links {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
-    <canvas id="canvas"></canvas>
-
-    <div class="loading-screen">
-        <div class="loading-spinner"></div>
+    <!-- Preloader with 3D Logo Animation -->
+    <div class="preloader">
+        <div class="preloader-content">
+            <div class="logo-3d">
+                <div class="logo-card">
+                    <div class="logo-badge-large">TB</div>
+                </div>
+            </div>
+            <div class="preloader-text">TANUSH.BURANDE</div>
+            <div class="progress-container">
+                <div class="progress-bar"></div>
+            </div>
+        </div>
     </div>
 
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="logo-container">
+            <div class="logo-badge">TB</div>
+            <div class="logo-text">
+                <div class="name">TANUSH.BURANDE</div>
+                <div class="title">Portfolio</div>
+            </div>
+        </div>
+
+        <div class="nav-links">
+            <a href="#" class="active">Home</a>
+            <a href="#">Work</a>
+            <a href="#">About</a>
+            <a href="#">Services</a>
+            <a href="#">Blog</a>
+            <button class="cta-button">Contact Me</button>
+        </div>
+    </nav>
+
+    <!-- Canvas for 3D Scene -->
+    <canvas id="canvas"></canvas>
+
+    <!-- UI Overlay -->
     <div class="ui-overlay">
-        <div class="header">
-            <h1>3D PORTFOLIO</h1>
-            <p>IMMERSIVE EXPERIENCE</p>
+        <div class="header-subtitle">
+            <h2>3D IMMERSIVE</h2>
+            <p>DESIGN INTELLIGENCE</p>
         </div>
 
         <div class="nav-dots">
@@ -269,9 +600,7 @@
             <div class="nav-dot" data-section="3"></div>
         </div>
 
-        <div class="section-label" style="top: 50%; transform: translateY(-50%);">
-            Welcome
-        </div>
+        <div class="section-label">Welcome</div>
 
         <div class="scroll-hint">
             SCROLL TO EXPLORE
@@ -280,16 +609,22 @@
 
         <div class="info-panel">
             <h3>NEURAL SPHERE</h3>
-            <p>Experience the fusion of design and technology. Click to explore, scroll to navigate through the immersive 3D world.</p>
+            <p>Experience design intelligence powered by AI. Navigate through immersive 3D environments showcasing professional work and expertise.</p>
+        </div>
+
+        <div class="social-links">
+            <a href="#" class="social-link" title="GitHub">⊙</a>
+            <a href="#" class="social-link" title="LinkedIn">in</a>
+            <a href="#" class="social-link" title="Twitter">𝕏</a>
+            <a href="#" class="social-link" title="Email">✉</a>
         </div>
     </div>
 
+    <!-- Three.js Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/postprocessing/EffectComposer.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/postprocessing/RenderPass.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/postprocessing/UnrealBloomPass.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/postprocessing/DepthOfFieldPass.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three@r128/examples/js/shaders/BokehShader.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>
